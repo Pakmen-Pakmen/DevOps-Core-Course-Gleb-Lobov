@@ -30,3 +30,4 @@ docker run -p 5000:5000 <your-tag>
 docker pull <your-dockerhub-username>/devops-info-service:latest
 docker run -p 5000:5000 <your-dockerhub-username>/devops-info-service:latest
 ```
+![CI](https://github.com/Pakmen-Pakmen/DevOps-Core-Course-Gleb-Lobov/actions/workflows/python-ci.yml/badge.svg)

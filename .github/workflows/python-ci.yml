@@ -1,0 +1,69 @@
+name: Python CI/CD
+
+on:
+  push:
+    branches: [ master ]
+    paths:
+      - 'app_python/**'
+      - '.github/workflows/python-ci.yml'
+  pull_request:
+    branches: [ master ]
+    paths:
+      - 'app_python/**'
+
+jobs:
+  test-and-build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+
+    - name: Set up Python
+      uses: actions/setup-python@v5
+      with:
+        python-version: '3.13'
+        cache: 'pip'
+
+    - name: Install dependencies
+      run: |
+        cd app_python
+        pip install -r requirements.txt
+        pip install -r requirements-dev.txt
+
+    - name: Lint with flake8
+      run: |
+        cd app_python
+        flake8 .
+
+    - name: Run tests
+      run: |
+        cd app_python
+        pytest --cov=. --cov-report=xml
+
+    - name: Log in to Docker Hub
+      uses: docker/login-action@v3
+      with:
+        username: ${{ secrets.DOCKERHUB_USERNAME }}
+        password: ${{ secrets.DOCKERHUB_TOKEN }}
+
+    - name: Extract version
+      id: vars
+      run: echo "VERSION=$(grep SERVICE_VERSION app_python/app.py | cut -d '"' -f2)" >> $GITHUB_ENV
+
+    - name: Build and push Docker image
+      uses: docker/build-push-action@v6
+      with:
+        context: ./app_python
+        push: true
+        tags: |
+          pakmengamer/devops-info-service:${{ env.VERSION }}
+          pakmengamer/devops-info-service:latest
+          
+    - name: Run Snyk to check Docker image
+      uses: snyk/actions/docker@master
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }}
+      with:
+        image: pakmengamer/devops-info-service
+        args: --severity-threshold=high
