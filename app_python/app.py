@@ -37,6 +37,7 @@ logger = logging.getLogger(__name__)
 
 logger.info("Starting DevOps Info Service...")
 
+
 # -----------------------------------------------------------------------------
 # Helper functions
 # -----------------------------------------------------------------------------
@@ -95,8 +96,16 @@ def index():
             "path": request.path,
         },
         "endpoints": [
-            {"path": "/", "method": "GET", "description": "Service information"},
-            {"path": "/health", "method": "GET", "description": "Health check"},
+            {
+            "path": "/",
+            "method": "GET",
+            "description": "Service information"
+            },
+            {
+            "path": "/health",
+            "method": "GET",
+            "description": "Health check"
+            },
         ],
     }
 
