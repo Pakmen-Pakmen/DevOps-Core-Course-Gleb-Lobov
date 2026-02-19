@@ -1,0 +1,6 @@
+config:
+  yandex:cloudId: b1gv9k7pc525ah6qke1t
+  yandex:folderId: b1gd5as04jfft60p281u
+  yandex:zone: ru-central1-a
+  yandex:serviceAccountKeyFile: C:/Users/79524/.yc/terraform-key.json
+encryptionsalt: v1:vKzU3AUsRQk=:v1:xMS39UpeMYbChZ7O:qgvXTMxalEBT4c3H6fvks7wc+dyq/A==

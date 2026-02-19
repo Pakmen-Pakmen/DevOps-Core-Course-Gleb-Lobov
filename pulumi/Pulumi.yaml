@@ -1,0 +1,7 @@
+name: devops-lab
+description: Lab 4 Pulumi Infrastructure
+runtime: python
+config:
+  pulumi:tags:
+    value:
+      pulumi:template: python

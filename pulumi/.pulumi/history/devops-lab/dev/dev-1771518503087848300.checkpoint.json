@@ -1,0 +1,262 @@
+{
+    "version": 3,
+    "checkpoint": {
+        "stack": "organization/devops-lab/dev",
+        "latest": {
+            "manifest": {
+                "time": "2026-02-19T19:28:23.07897+03:00",
+                "magic": "7b54cd6e79f5cecd9ae124cb92b834b486c7e21993124e3a4e456c27c3ce48f9",
+                "version": "v3.222.0"
+            },
+            "secrets_providers": {
+                "type": "passphrase",
+                "state": {
+                    "salt": "v1:vKzU3AUsRQk=:v1:xMS39UpeMYbChZ7O:qgvXTMxalEBT4c3H6fvks7wc+dyq/A=="
+                }
+            },
+            "resources": [
+                {
+                    "urn": "urn:pulumi:dev::devops-lab::pulumi:pulumi:Stack::devops-lab-dev",
+                    "custom": false,
+                    "type": "pulumi:pulumi:Stack",
+                    "outputs": {
+                        "external_ip": "89.169.155.227"
+                    },
+                    "created": "2026-02-19T16:13:49.4053578Z",
+                    "modified": "2026-02-19T16:13:49.4053578Z"
+                },
+                {
+                    "urn": "urn:pulumi:dev::devops-lab::pulumi:providers:yandex::default_0_13_0",
+                    "custom": true,
+                    "id": "d3f769b1-fa86-4da0-a361-ba58d584eaca",
+                    "type": "pulumi:providers:yandex",
+                    "inputs": {
+                        "__internal": {},
+                        "cloudId": "b1gv9k7pc525ah6qke1t",
+                        "folderId": "b1gd5as04jfft60p281u",
+                        "serviceAccountKeyFile": "C:/Users/79524/.yc/terraform-key.json",
+                        "version": "0.13.0",
+                        "zone": "ru-central1-a"
+                    },
+                    "outputs": {
+                        "cloudId": "b1gv9k7pc525ah6qke1t",
+                        "folderId": "b1gd5as04jfft60p281u",
+                        "serviceAccountKeyFile": "C:/Users/79524/.yc/terraform-key.json",
+                        "version": "0.13.0",
+                        "zone": "ru-central1-a"
+                    },
+                    "created": "2026-02-19T16:13:49.6636175Z",
+                    "modified": "2026-02-19T16:13:49.6636175Z"
+                },
+                {
+                    "urn": "urn:pulumi:dev::devops-lab::yandex:index/vpcNetwork:VpcNetwork::devops-network",
+                    "custom": true,
+                    "id": "enpujhjmip2gks3b2a93",
+                    "type": "yandex:index/vpcNetwork:VpcNetwork",
+                    "inputs": {
+                        "__defaults": [
+                            "name"
+                        ],
+                        "name": "devops-network-f6ff0f0"
+                    },
+                    "outputs": {
+                        "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":60000000000,\"delete\":60000000000,\"update\":60000000000}}",
+                        "createdAt": "2026-02-19T16:13:49Z",
+                        "defaultSecurityGroupId": "enpf6cu2s7u2kk7h0ldc",
+                        "description": "",
+                        "folderId": "b1gd5as04jfft60p281u",
+                        "id": "enpujhjmip2gks3b2a93",
+                        "labels": {},
+                        "name": "devops-network-f6ff0f0",
+                        "subnetIds": []
+                    },
+                    "parent": "urn:pulumi:dev::devops-lab::pulumi:pulumi:Stack::devops-lab-dev",
+                    "provider": "urn:pulumi:dev::devops-lab::pulumi:providers:yandex::default_0_13_0::d3f769b1-fa86-4da0-a361-ba58d584eaca",
+                    "created": "2026-02-19T16:13:51.9211591Z",
+                    "modified": "2026-02-19T16:13:51.9211591Z"
+                },
+                {
+                    "urn": "urn:pulumi:dev::devops-lab::yandex:index/vpcSubnet:VpcSubnet::devops-subnet",
+                    "custom": true,
+                    "id": "e9bmu6251rm2qqirss58",
+                    "type": "yandex:index/vpcSubnet:VpcSubnet",
+                    "inputs": {
+                        "__defaults": [
+                            "name"
+                        ],
+                        "name": "devops-subnet-454ded4",
+                        "networkId": "enpujhjmip2gks3b2a93",
+                        "v4CidrBlocks": [
+                            "10.6.0.0/24"
+                        ],
+                        "zone": "ru-central1-a"
+                    },
+                    "outputs": {
+                        "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":180000000000,\"delete\":180000000000,\"update\":180000000000}}",
+                        "createdAt": "2026-02-19T16:13:51Z",
+                        "description": "",
+                        "dhcpOptions": null,
+                        "folderId": "b1gd5as04jfft60p281u",
+                        "id": "e9bmu6251rm2qqirss58",
+                        "labels": {},
+                        "name": "devops-subnet-454ded4",
+                        "networkId": "enpujhjmip2gks3b2a93",
+                        "routeTableId": "",
+                        "v4CidrBlocks": [
+                            "10.6.0.0/24"
+                        ],
+                        "v6CidrBlocks": [],
+                        "zone": "ru-central1-a"
+                    },
+                    "parent": "urn:pulumi:dev::devops-lab::pulumi:pulumi:Stack::devops-lab-dev",
+                    "dependencies": [
+                        "urn:pulumi:dev::devops-lab::yandex:index/vpcNetwork:VpcNetwork::devops-network"
+                    ],
+                    "provider": "urn:pulumi:dev::devops-lab::pulumi:providers:yandex::default_0_13_0::d3f769b1-fa86-4da0-a361-ba58d584eaca",
+                    "propertyDependencies": {
+                        "networkId": [
+                            "urn:pulumi:dev::devops-lab::yandex:index/vpcNetwork:VpcNetwork::devops-network"
+                        ],
+                        "v4CidrBlocks": [],
+                        "zone": []
+                    },
+                    "created": "2026-02-19T16:13:52.4578476Z",
+                    "modified": "2026-02-19T16:13:52.4578476Z"
+                },
+                {
+                    "urn": "urn:pulumi:dev::devops-lab::yandex:index/computeInstance:ComputeInstance::devops-vm",
+                    "custom": true,
+                    "id": "fhm698s8h1ff9rk89jtn",
+                    "type": "yandex:index/computeInstance:ComputeInstance",
+                    "inputs": {
+                        "__defaults": [
+                            "name",
+                            "networkAccelerationType"
+                        ],
+                        "bootDisk": {
+                            "__defaults": [
+                                "autoDelete"
+                            ],
+                            "autoDelete": true,
+                            "initializeParams": {
+                                "__defaults": [
+                                    "type"
+                                ],
+                                "imageId": "fd80qm01ah03dkqb14lc",
+                                "size": 30,
+                                "type": "network-hdd"
+                            }
+                        },
+                        "metadata": {
+                            "__defaults": [],
+                            "ssh-keys": "ubuntu:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICdx+PMMveyiQM9Hx4IkOrSUScLZxI3MDGxDYHWAaASv 79524@DESKTOP-J5GC0K6"
+                        },
+                        "name": "devops-vm-58745c3",
+                        "networkAccelerationType": "standard",
+                        "networkInterfaces": [
+                            {
+                                "__defaults": [
+                                    "ipv4"
+                                ],
+                                "ipv4": true,
+                                "nat": true,
+                                "subnetId": "e9bmu6251rm2qqirss58"
+                            }
+                        ],
+                        "platformId": "standard-v1",
+                        "resources": {
+                            "__defaults": [
+                                "coreFraction"
+                            ],
+                            "coreFraction": 100,
+                            "cores": 2,
+                            "memory": 2
+                        }
+                    },
+                    "outputs": {
+                        "__meta": "{\"e2bfb730-ecaa-11e6-8f88-34363bc7c4c0\":{\"create\":300000000000,\"delete\":300000000000,\"update\":300000000000},\"schema_version\":\"1\"}",
+                        "bootDisk": {
+                            "autoDelete": true,
+                            "deviceName": "fhmoa54mg0cv90p1j5kd",
+                            "diskId": "fhmoa54mg0cv90p1j5kd",
+                            "initializeParams": {
+                                "blockSize": 4096,
+                                "description": "",
+                                "imageId": "fd80qm01ah03dkqb14lc",
+                                "name": "",
+                                "size": 30,
+                                "snapshotId": "",
+                                "type": "network-hdd"
+                            },
+                            "mode": "READ_WRITE"
+                        },
+                        "createdAt": "2026-02-19T16:13:52Z",
+                        "description": "",
+                        "folderId": "b1gd5as04jfft60p281u",
+                        "fqdn": "fhm698s8h1ff9rk89jtn.auto.internal",
+                        "hostname": "fhm698s8h1ff9rk89jtn",
+                        "id": "fhm698s8h1ff9rk89jtn",
+                        "labels": {},
+                        "metadata": {
+                            "ssh-keys": "ubuntu:ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICdx+PMMveyiQM9Hx4IkOrSUScLZxI3MDGxDYHWAaASv 79524@DESKTOP-J5GC0K6"
+                        },
+                        "name": "devops-vm-58745c3",
+                        "networkAccelerationType": "standard",
+                        "networkInterfaces": [
+                            {
+                                "dnsRecords": [],
+                                "index": 0,
+                                "ipAddress": "10.6.0.8",
+                                "ipv4": true,
+                                "ipv6": false,
+                                "ipv6Address": "",
+                                "ipv6DnsRecords": [],
+                                "macAddress": "d0:0d:64:a3:88:88",
+                                "nat": true,
+                                "natDnsRecords": [],
+                                "natIpAddress": "89.169.155.227",
+                                "natIpVersion": "IPV4",
+                                "securityGroupIds": [],
+                                "subnetId": "e9bmu6251rm2qqirss58"
+                            }
+                        ],
+                        "placementPolicy": {
+                            "placementGroupId": ""
+                        },
+                        "platformId": "standard-v1",
+                        "resources": {
+                            "coreFraction": 100,
+                            "cores": 2,
+                            "gpus": 0,
+                            "memory": 2
+                        },
+                        "schedulingPolicy": {
+                            "preemptible": false
+                        },
+                        "secondaryDisks": [],
+                        "serviceAccountId": "",
+                        "status": "running",
+                        "zone": "ru-central1-a"
+                    },
+                    "parent": "urn:pulumi:dev::devops-lab::pulumi:pulumi:Stack::devops-lab-dev",
+                    "dependencies": [
+                        "urn:pulumi:dev::devops-lab::yandex:index/vpcSubnet:VpcSubnet::devops-subnet"
+                    ],
+                    "provider": "urn:pulumi:dev::devops-lab::pulumi:providers:yandex::default_0_13_0::d3f769b1-fa86-4da0-a361-ba58d584eaca",
+                    "propertyDependencies": {
+                        "bootDisk": [],
+                        "metadata": [],
+                        "networkInterfaces": [
+                            "urn:pulumi:dev::devops-lab::yandex:index/vpcSubnet:VpcSubnet::devops-subnet"
+                        ],
+                        "platformId": [],
+                        "resources": []
+                    },
+                    "created": "2026-02-19T16:14:48.5814652Z",
+                    "modified": "2026-02-19T16:27:57.5587925Z"
+                }
+            ],
+            "metadata": {}
+        }
+    }
+}

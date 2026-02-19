@@ -1,0 +1,39 @@
+{
+    "kind": "destroy",
+    "startTime": 1771519368,
+    "message": "final",
+    "environment": {
+        "exec.kind": "cli",
+        "git.author": "Pakmen-Pakmen",
+        "git.author.email": "lobofgleb@mail.ru",
+        "git.committer": "Pakmen-Pakmen",
+        "git.committer.email": "lobofgleb@mail.ru",
+        "git.dirty": "true",
+        "git.head": "fe083d696e6fb4116073f5035bcce61d3ac60eda",
+        "git.headName": "refs/heads/lab03",
+        "pulumi.arch": "amd64",
+        "pulumi.os": "windows",
+        "pulumi.version": "v3.222.0",
+        "stack.environments": "[]",
+        "updatePlan": "false",
+        "vcs.kind": "github.com",
+        "vcs.owner": "Pakmen-Pakmen",
+        "vcs.repo": "DevOps-Core-Course-Gleb-Lobov",
+        "vcs.root": "pulumi"
+    },
+    "config": {
+        "pulumi:tags": {
+            "pulumi:template": "python"
+        },
+        "yandex:cloudId": "b1gv9k7pc525ah6qke1t",
+        "yandex:folderId": "b1gd5as04jfft60p281u",
+        "yandex:serviceAccountKeyFile": "C:/Users/79524/.yc/terraform-key.json",
+        "yandex:zone": "ru-central1-a"
+    },
+    "version": 0,
+    "result": "succeeded",
+    "endTime": 1771519405,
+    "resourceChanges": {
+        "delete": 4
+    }
+}
