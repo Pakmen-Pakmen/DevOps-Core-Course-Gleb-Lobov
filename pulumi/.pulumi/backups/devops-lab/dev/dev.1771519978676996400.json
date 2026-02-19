@@ -1,0 +1,20 @@
+{
+    "version": 3,
+    "checkpoint": {
+        "stack": "organization/devops-lab/dev",
+        "latest": {
+            "manifest": {
+                "time": "2026-02-19T19:52:58.6446162+03:00",
+                "magic": "7b54cd6e79f5cecd9ae124cb92b834b486c7e21993124e3a4e456c27c3ce48f9",
+                "version": "v3.222.0"
+            },
+            "secrets_providers": {
+                "type": "passphrase",
+                "state": {
+                    "salt": "v1:vKzU3AUsRQk=:v1:xMS39UpeMYbChZ7O:qgvXTMxalEBT4c3H6fvks7wc+dyq/A=="
+                }
+            },
+            "metadata": {}
+        }
+    }
+}

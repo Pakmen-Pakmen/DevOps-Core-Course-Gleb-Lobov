@@ -1,0 +1,73 @@
+{
+    "version": 3,
+    "checkpoint": {
+        "stack": "organization/devops-lab/dev",
+        "latest": {
+            "manifest": {
+                "time": "2026-02-19T19:52:58.6270445+03:00",
+                "magic": "7b54cd6e79f5cecd9ae124cb92b834b486c7e21993124e3a4e456c27c3ce48f9",
+                "version": "v3.222.0"
+            },
+            "secrets_providers": {
+                "type": "passphrase",
+                "state": {
+                    "salt": "v1:vKzU3AUsRQk=:v1:xMS39UpeMYbChZ7O:qgvXTMxalEBT4c3H6fvks7wc+dyq/A=="
+                }
+            },
+            "resources": [
+                {
+                    "urn": "urn:pulumi:dev::devops-lab::pulumi:providers:yandex::default_0_13_0",
+                    "custom": true,
+                    "id": "7c79d1a1-3468-43b6-a7d8-a4785a5ad449",
+                    "type": "pulumi:providers:yandex",
+                    "inputs": {
+                        "__internal": {},
+                        "cloudId": "b1gv9k7pc525ah6qke1t",
+                        "folderId": "b1gd5as04jfft60p281u",
+                        "serviceAccountKeyFile": "C:/Users/79524/.yc/terraform-key.json",
+                        "version": "0.13.0",
+                        "zone": "ru-central1-a"
+                    },
+                    "outputs": {
+                        "cloudId": "b1gv9k7pc525ah6qke1t",
+                        "folderId": "b1gd5as04jfft60p281u",
+                        "serviceAccountKeyFile": "C:/Users/79524/.yc/terraform-key.json",
+                        "version": "0.13.0",
+                        "zone": "ru-central1-a"
+                    },
+                    "created": "2026-02-19T16:47:12.8744471Z",
+                    "modified": "2026-02-19T16:47:12.8744471Z"
+                }
+            ],
+            "pending_operations": [
+                {
+                    "resource": {
+                        "urn": "urn:pulumi:dev::devops-lab::pulumi:providers:yandex::default_0_13_0",
+                        "custom": true,
+                        "id": "7c79d1a1-3468-43b6-a7d8-a4785a5ad449",
+                        "type": "pulumi:providers:yandex",
+                        "inputs": {
+                            "__internal": {},
+                            "cloudId": "b1gv9k7pc525ah6qke1t",
+                            "folderId": "b1gd5as04jfft60p281u",
+                            "serviceAccountKeyFile": "C:/Users/79524/.yc/terraform-key.json",
+                            "version": "0.13.0",
+                            "zone": "ru-central1-a"
+                        },
+                        "outputs": {
+                            "cloudId": "b1gv9k7pc525ah6qke1t",
+                            "folderId": "b1gd5as04jfft60p281u",
+                            "serviceAccountKeyFile": "C:/Users/79524/.yc/terraform-key.json",
+                            "version": "0.13.0",
+                            "zone": "ru-central1-a"
+                        },
+                        "created": "2026-02-19T16:47:12.8744471Z",
+                        "modified": "2026-02-19T16:47:12.8744471Z"
+                    },
+                    "type": "deleting"
+                }
+            ],
+            "metadata": {}
+        }
+    }
+}
