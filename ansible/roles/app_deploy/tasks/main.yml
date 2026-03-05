@@ -2,11 +2,15 @@
   community.docker.docker_login:
     username: "{{ docker_username }}"
     password: "{{ docker_password }}"
+  tags:
+    - deploy
 
 - name: Pull Docker image
   community.docker.docker_image:
     name: "{{ docker_image }}"
     source: pull
+  tags:
+    - deploy
 
 - name: Run container
   community.docker.docker_container:
@@ -16,3 +20,12 @@
     restart_policy: always
     published_ports:
       - "{{ app_port }}:5000"
+  tags:
+    - deploy
+
+- name: Stop and remove container
+  community.docker.docker_container:
+    name: python_app
+    state: absent
+  tags:
+    - wipe

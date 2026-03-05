@@ -1,37 +1,43 @@
-- name: Update apt cache
-  apt:
-    update_cache: yes
+- name: System preparation block
+  block:
+
+    - name: Update apt cache
+      apt:
+        update_cache: yes
+
+    - name: Install base packages
+      apt:
+        name:
+          - python3-pip
+          - ufw
+          - curl
+          - git
+        state: present
+
   become: true
+  tags:
+    - common
+    - packages
 
-- name: Install required packages
-  apt:
-    name:
-      - docker.io
-      - python3-pip
-      - ufw
-    state: present
+
+- name: Firewall configuration block
+  block:
+
+    - name: Allow SSH
+      ufw:
+        rule: allow
+        port: 22
+
+    - name: Allow app port
+      ufw:
+        rule: allow
+        port: "{{ app_port }}"
+
+    - name: Enable UFW
+      ufw:
+        state: enabled
+
   become: true
-
-- name: Install Docker SDK for Python
-  pip:
-    name: docker
-
-- name: Enable and start Docker
-  service:
-    name: docker
-    state: started
-    enabled: true
-
-- name: Allow SSH
-  ufw:
-    rule: allow
-    port: 22
-
-- name: Allow app port
-  ufw:
-    rule: allow
-    port: "{{ app_port }}"
-
-- name: Enable UFW
-  ufw:
-    state: enabled
+  tags:
+    - firewall
+    - common
