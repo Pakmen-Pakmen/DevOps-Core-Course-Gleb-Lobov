@@ -14,11 +14,35 @@
           - git
         state: present
 
+  rescue:
+
+    - name: Fix apt cache if failed
+      command: apt-get update --fix-missing
+
+  always:
+
+    - name: Log completion
+      file:
+        path: /tmp/common_role_done
+        state: touch
+
   become: true
   tags:
     - common
     - packages
 
+- name: User management block
+  block:
+
+    - name: Ensure ubuntu user exists
+      user:
+        name: ubuntu
+        state: present
+
+  become: true
+  tags:
+    - common
+    - users
 
 - name: Firewall configuration block
   block:
