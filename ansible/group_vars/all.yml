@@ -1,0 +1,2 @@
+docker_image: "pakmengamer/python-app:latest"
+app_port: 5000
