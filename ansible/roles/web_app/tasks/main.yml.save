@@ -1,0 +1,44 @@
+- name: Application deployment block
+  block:
+
+    - name: Docker login
+      community.docker.docker_login:
+        username: "{{ docker_username }}"
+        password: "{{ docker_password }}"
+
+    - name: Create app directory
+      file:
+        path: /opt/python_app
+        state: directory
+
+    - name: Copy docker-compose file
+      copy:
+        src: docker-compose.yml
+        dest: /opt/python_app/docker-compose.yml
+
+    - name: Deploy application with Docker Compose
+      community.docker.docker_compose:
+        project_src: /opt/python_app
+        state: present
+      environment:
+        DOCKER_IMAGE: "{{ docker_image }}"
+        APP_PORT: "{{ app_port }}"
+
+  become: true
+  tags:
+    - deploy
+    - app
+
+
+- name: Application removal block
+  block:
+
+    - name: Remove application with Docker Compose
+      community.docker.docker_compose:
+        project_src: /opt/python_app
+        state: absent
+
+  become: true
+  tags:
+    - wipe
+    - app
