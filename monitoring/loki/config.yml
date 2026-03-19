@@ -6,6 +6,9 @@ server:
 common:
   instance_addr: 127.0.0.1
   path_prefix: /tmp/loki
+  ring:
+    kvstore:
+      store: inmemory
 
 schema_config:
   configs:
