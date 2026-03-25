@@ -21,7 +21,7 @@ PORT = int(os.getenv("PORT", 5000))
 DEBUG = os.getenv("DEBUG", "False").lower() == "true"
 
 SERVICE_NAME = "devops-info-service"
-SERVICE_VERSION = "1.0.0"
+SERVICE_VERSION = "1.0.1"
 SERVICE_DESCRIPTION = "DevOps course info service"
 FRAMEWORK = "Flask"
 
@@ -173,6 +173,11 @@ def index():
                 "description": "Health check"
             },
             {
+                "path": "/ready",
+                "method": "GET",
+                "description": "Readiness check"
+            },
+            {
                 "path": "/metrics",
                 "method": "GET",
                 "description": "Prometheus metrics"
@@ -192,6 +197,15 @@ def health():
         "status": "healthy",
         "timestamp": datetime.now(timezone.utc).isoformat(),
         "uptime_seconds": uptime["seconds"],
+    })
+
+
+@app.route("/ready", methods=["GET"])
+def ready():
+    """Readiness probe: app accepts traffic once process is up."""
+    return jsonify({
+        "status": "ready",
+        "timestamp": datetime.now(timezone.utc).isoformat(),
     })
 
 
