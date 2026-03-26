@@ -8,7 +8,7 @@ metadata:
     app.kubernetes.io/name: devops-info-service
     app.kubernetes.io/component: api
 spec:
-  replicas: 3
+  replicas: 5
   strategy:
     type: RollingUpdate
     rollingUpdate:
@@ -19,6 +19,8 @@ spec:
       app: devops-info-service
   template:
     metadata:
+      annotations:
+        rollout-demo: "v2"
       labels:
         app: devops-info-service
         app.kubernetes.io/name: devops-info-service
@@ -30,7 +32,7 @@ spec:
       containers:
         - name: devops-info-service
           image: pakmengamer/devops-info-service:1.0.1
-          imagePullPolicy: Always
+          imagePullPolicy: IfNotPresent
           ports:
             - name: http
               containerPort: 5000

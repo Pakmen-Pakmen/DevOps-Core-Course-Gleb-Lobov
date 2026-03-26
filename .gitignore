@@ -8,3 +8,10 @@ __pycache__/
 k8s/tls.key
 k8s/tls.crt
 k8s/*.pem
+
+# Local Kubernetes artifacts and downloaded binaries (do not commit)
+.kube/
+.minikube/
+bin/
+kubectl
+kubectl.sha256

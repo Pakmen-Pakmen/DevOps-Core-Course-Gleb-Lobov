@@ -36,7 +36,7 @@ flowchart LR
 | File | Purpose |
 |------|---------|
 | `namespace.yml` | Isolates all Lab 09 objects in `lab09`. |
-| `deployment.yml` | **3 replicas**, RollingUpdate (**maxSurge: 1**, **maxUnavailable: 0**), probes, resources, non-root pod security context, image `pakmengamer/devops-info-service:1.0.1`. |
+| `deployment.yml` | **3 replicas (Task 2), scaled to 5 (Task 4)**, RollingUpdate (**maxSurge: 1**, **maxUnavailable: 0**), probes, resources, non-root pod security context, image `pakmengamer/devops-info-service:1.0.1`. |
 | `service.yml` | **NodePort** for the Flask Deployment; selector `app: devops-info-service`. |
 | `deployment-app2.yml` | Second workload: **`nginxdemos/hello`** (2 replicas) for Ingress bonus. |
 | `service-app2.yml` | **ClusterIP** for the hello app (only reached via Ingress or `port-forward`). |
@@ -50,29 +50,56 @@ flowchart LR
 
 ## 3. Deployment evidence
 
-Run against your cluster after applying manifests (see section 4). **Replace the samples below** with your own output for submission.
+Run against your cluster after applying manifests (see section 4). Below are the **real** outputs from my local `kind` cluster (initial deploy, before scaling to 5).
 
 ```bash
-kubectl config set-context --current --namespace=lab09
-kubectl get all
-kubectl get pods,svc -o wide
-kubectl describe deployment devops-info-deployment
+kubectl get all -n lab09 -o wide
+kubectl get pods,svc -n lab09 -o wide
+kubectl describe deployment/devops-info-deployment -n lab09
 ```
-
-Example shape (not from a live cluster):
 
 ```text
-NAME                                        READY   STATUS    RESTARTS   AGE
-pod/devops-info-deployment-xxxxxxxx-xxxxx   1/1     Running   0          2m
-...
-NAME                        TYPE        CLUSTER-IP      PORT(S)
-service/devops-info-service NodePort      10.96.x.x       80:30080/TCP
+NAME                                          READY   STATUS    RESTARTS   AGE   IP            NODE                  NOMINATED NODE   READINESS GATES
+pod/devops-info-deployment-6488694f95-d6nt4   1/1     Running   0          72s   10.244.0.10   lab09-control-plane   <none>           <none>
+pod/devops-info-deployment-6488694f95-fdv4z   1/1     Running   0          86s   10.244.0.8    lab09-control-plane   <none>           <none>
+pod/devops-info-deployment-6488694f95-nsfmt   1/1     Running   0          79s   10.244.0.9    lab09-control-plane   <none>           <none>
+
+NAME                          TYPE       CLUSTER-IP    EXTERNAL-IP   PORT(S)        AGE     SELECTOR
+service/devops-info-service   NodePort   10.96.27.10   <none>        80:30080/TCP   3m38s   app=devops-info-service
+
+NAME                                     READY   UP-TO-DATE   AVAILABLE   AGE     CONTAINERS            IMAGES                                  SELECTOR
+deployment.apps/devops-info-deployment   3/3     3            3           3m38s   devops-info-service   pakmengamer/devops-info-service:1.0.1   app=devops-info-service
+
+NAME                                     DESIRED   CURRENT   READY   AGE     CONTAINERS            IMAGES                                  SELECTOR
+replicaset.apps/devops-info-deployment-6488694f95   3         3         3       86s     devops-info-service   pakmengamer/devops-info-service:1.0.1   app=devops-info-service,pod-template-hash=6488694f95
+replicaset.apps/devops-info-deployment-79786bbf6f   0         0         0       3m38s   devops-info-service   pakmengamer/devops-info-service:1.0.1   app=devops-info-service,pod-template-hash=79786bbf6f
 ```
 
-**App responds (NodePort):**
+```text
+Name:                   devops-info-deployment
+Namespace:              lab09
+Replicas:               3 desired | 3 updated | 3 total | 3 available | 0 unavailable
+StrategyType:           RollingUpdate
+RollingUpdateStrategy:  0 max unavailable, 1 max surge
+Container image:        pakmengamer/devops-info-service:1.0.1
+Liveness probe:         http-get http://:http/health delay=15s timeout=3s period=10s
+Readiness probe:        http-get http://:http/ready delay=5s timeout=2s period=5s
+```
 
-- Minikube: `minikube service devops-info-service -n lab09 --url` then `curl -s <url>/health | jq .`
-- kind / Docker Desktop: `kubectl port-forward -n lab09 svc/devops-info-service 8080:80` then `curl -s http://127.0.0.1:8080/`
+**App responds (port-forward):**
+
+```bash
+# terminal 1
+kubectl port-forward -n lab09 svc/devops-info-service 8080:80
+```
+
+```text
+curl -s http://127.0.0.1:8080/health
+{"status":"healthy","timestamp":"2026-03-25T21:29:36.213300+00:00","uptime_seconds":86}
+
+curl -s http://127.0.0.1:8080/ready
+{"status":"ready","timestamp":"2026-03-25T21:29:36.591021+00:00"}
+```
 
 ---
 
@@ -80,7 +107,7 @@ service/devops-info-service NodePort      10.96.x.x       80:30080/TCP
 
 ### 4.1 Install tools and start a cluster
 
-See **«Пошагово на твоей машине»** at the end of this file for condensed steps.
+See **"Step-by-step on your machine"** at the end of this file for condensed steps.
 
 ### 4.2 Build and publish the app image (before first deploy)
 
@@ -110,7 +137,21 @@ kubectl get pods -n lab09 -w
 kubectl scale deployment/devops-info-deployment -n lab09 --replicas=5
 ```
 
-(Optional) scale back to **3** before the next section so the file matches the repo.
+```text
+deployment.apps/devops-info-deployment scaled
+Waiting for deployment "devops-info-deployment" rollout to finish: 3 of 5 updated replicas are available...
+Waiting for deployment "devops-info-deployment" rollout to finish: 4 of 5 updated replicas are available...
+deployment "devops-info-deployment" successfully rolled out
+
+NAME                                      READY   STATUS    RESTARTS   AGE     IP            NODE
+devops-info-deployment-6488694f95-cj4x9   1/1     Running   0          13s     10.244.0.12   lab09-control-plane
+devops-info-deployment-6488694f95-d6nt4   1/1     Running   0          2m17s   10.244.0.10   lab09-control-plane
+devops-info-deployment-6488694f95-fdv4z   1/1     Running   0          2m31s   10.244.0.8    lab09-control-plane
+devops-info-deployment-6488694f95-nsfmt   1/1     Running   0          2m24s   10.244.0.9    lab09-control-plane
+devops-info-deployment-6488694f95-xftb9   1/1     Running   0          13s     10.244.0.11   lab09-control-plane
+```
+
+Then I run the rolling update on the same 5 replicas.
 
 ### 4.5 Rolling update and rollback
 
@@ -120,6 +161,36 @@ kubectl scale deployment/devops-info-deployment -n lab09 --replicas=5
 4. Roll back: `kubectl rollout undo deployment/devops-info-deployment -n lab09`
 
 With **maxUnavailable: 0** and **maxSurge: 1**, Kubernetes creates new pods before terminating old ones, which avoids dropping below desired capacity during the rollout.
+
+```text
+After the rolling update (annotation in `template.metadata`), the rollout completed successfully:
+deployment "devops-info-deployment" successfully rolled out
+
+Rollout history:
+deployment.apps/devops-info-deployment 
+REVISION CHANGE-CAUSE
+1         <none>
+2         <none>
+3         <none>
+
+After rollback:
+deployment "devops-info-deployment" rolled back
+deployment "devops-info-deployment" successfully rolled out
+```
+
+**App checks (port-forward to `localhost:8080`):**
+
+```text
+Before rolling update (health):
+{"status":"healthy","timestamp":"2026-03-25T21:31:07.888635+00:00","uptime_seconds":178}
+ready:
+{"status":"ready","timestamp":"2026-03-25T21:31:07.900163+00:00"}
+
+After rollback (health):
+{"status":"healthy","timestamp":"2026-03-25T21:33:19.920510+00:00","uptime_seconds":56}
+ready:
+{"status":"ready","timestamp":"2026-03-25T21:33:23.666702+00:00"}
+```
 
 ### 4.6 Bonus — Ingress controller, second app, TLS
 
@@ -185,14 +256,14 @@ curl -sk https://local.example.com/app2/
 
 ---
 
-## Пошагово на твоей машине
+## Step-by-step on your machine
 
-1. **Установи** `kubectl` и **minikube** или **kind** ([официальная инструкция](https://kubernetes.io/docs/tasks/tools/)).
-2. **Запусти кластер** (`minikube start` или `kind create cluster`).
-3. **Собери и запушь образ** с эндпоинтом `/ready` и версией **1.0.1** (через CI в `master` или вручную `docker build` + `docker push` в свой Docker Hub как `pakmengamer/devops-info-service:1.0.1`). Если твой Hub username другой — поправь `image:` в `k8s/deployment.yml`.
-4. **Примени:** `kubectl apply -f k8s/namespace.yml -f k8s/deployment.yml -f k8s/service.yml`.
-5. **Проверь:** `kubectl get pods -n lab09`, затем доступ по NodePort или `port-forward` (команды выше).
-6. **Масштабирование и rollout:** выполни команды из §4.4–4.5 и **вставь реальные выводы** в копию этого README или в отчёт к лабе.
-7. **Бонус:** включи Ingress, примени `deployment-app2.yml`, `service-app2.yml`, создай TLS secret, примени `ingress.yml`, проверь `curl` по HTTPS.
+1. **Install** `kubectl` and **minikube** or **kind** ([official guide](https://kubernetes.io/docs/tasks/tools/)).
+2. **Start a cluster** (`minikube start` or `kind create cluster`).
+3. **Build and push the image** with the `/ready` endpoint and version **1.0.1** (via CI on `master` or manually with `docker build` + `docker push` to Docker Hub as `pakmengamer/devops-info-service:1.0.1`). If your Docker Hub username is different, update `image:` in `k8s/deployment.yml`.
+4. **Apply manifests:** `kubectl apply -f k8s/namespace.yml -f k8s/deployment.yml -f k8s/service.yml`.
+5. **Verify:** `kubectl get pods -n lab09`, then access via NodePort or `port-forward` (commands above).
+6. **Scale and rollout:** run commands from §4.4-4.5 and **paste real outputs** into this README copy or your lab report.
+7. **Bonus:** enable Ingress, apply `deployment-app2.yml` and `service-app2.yml`, create the TLS secret, apply `ingress.yml`, and verify HTTPS with `curl`.
 
-Если что-то из шагов падает — пришли вывод `kubectl describe pod` / `kubectl logs` для конкретного Pod.
+If any step fails, share output from `kubectl describe pod` / `kubectl logs` for the specific pod.
