@@ -3,3 +3,15 @@
 .vault_pass
 ansible/inventory/*.pyc
 __pycache__/
+
+# Lab 09 TLS material (generate locally; do not commit)
+k8s/tls.key
+k8s/tls.crt
+k8s/*.pem
+
+# Local Kubernetes artifacts and downloaded binaries (do not commit)
+.kube/
+.minikube/
+bin/
+kubectl
+kubectl.sha256
