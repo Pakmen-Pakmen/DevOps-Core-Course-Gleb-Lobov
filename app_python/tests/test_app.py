@@ -19,6 +19,7 @@ def test_index_endpoint(client):
     assert "system" in data
     assert "runtime" in data
     assert data["service"]["name"] == "devops-info-service"
+    assert data["service"]["version"] == "1.0.1"
 
 
 def test_health_endpoint(client):
@@ -29,6 +30,13 @@ def test_health_endpoint(client):
 
     assert data["status"] == "healthy"
     assert "uptime_seconds" in data
+
+
+def test_ready_endpoint(client):
+    response = client.get("/ready")
+    assert response.status_code == 200
+    data = response.get_json()
+    assert data["status"] == "ready"
 
 
 def test_404_handler(client):
