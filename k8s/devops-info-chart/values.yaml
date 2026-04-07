@@ -7,6 +7,9 @@ image:
 
 nameOverride: ""
 fullnameOverride: ""
+serviceAccount:
+  create: true
+  name: ""
 
 podAnnotations:
   rollout-demo: "v1"
@@ -74,6 +77,18 @@ hooks:
   postInstall:
     enabled: true
     weight: 5
+secret:
+  enabled: true
+  name: ""
+  data:
+    username: "change-me"
+    password: "change-me"
+vault:
+  enabled: false
+  role: "devops-info-role"
+  secretPath: "secret/data/myapp/config"
+  fileName: "config"
+  annotations: {}
 
 nodeSelector: {}
 tolerations: []

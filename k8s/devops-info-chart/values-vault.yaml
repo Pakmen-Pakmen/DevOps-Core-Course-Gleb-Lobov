@@ -1,0 +1,8 @@
+vault:
+  enabled: true
+  role: "devops-info-role"
+  secretPath: "secret/data/myapp/config"
+  fileName: "config"
+
+secret:
+  enabled: false

@@ -30,3 +30,19 @@ app: devops-info-service
 app.kubernetes.io/name: devops-info-service
 app.kubernetes.io/instance: {{ .Release.Name }}
 {{- end }}
+
+{{- define "devops-info-chart.serviceAccountName" -}}
+{{- if .Values.serviceAccount.create }}
+{{- default (include "devops-info-chart.fullname" .) .Values.serviceAccount.name }}
+{{- else }}
+{{- default "default" .Values.serviceAccount.name }}
+{{- end }}
+{{- end }}
+
+{{- define "devops-info-chart.secretName" -}}
+{{- if .Values.secret.name }}
+{{- .Values.secret.name }}
+{{- else }}
+{{- printf "%s-secret" (include "devops-info-chart.fullname" .) }}
+{{- end }}
+{{- end }}
