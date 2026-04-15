@@ -46,11 +46,21 @@ spec:
               protocol: TCP
           env:
             {{- toYaml .Values.env | nindent 12 }}
-          {{- if .Values.secret.enabled }}
           envFrom:
+            - configMapRef:
+                name: {{ include "devops-info-chart.fullname" . }}-env
+          {{- if .Values.secret.enabled }}
             - secretRef:
                 name: {{ include "devops-info-chart.secretName" . }}
           {{- end }}
+          volumeMounts:
+            - name: config-volume
+              mountPath: {{ .Values.config.mountPath }}
+              readOnly: true
+            {{- if .Values.persistence.enabled }}
+            - name: data-volume
+              mountPath: {{ .Values.persistence.mountPath }}
+            {{- end }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
@@ -63,6 +73,15 @@ spec:
           resources:
             {{- toYaml . | nindent 12 }}
           {{- end }}
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "devops-info-chart.fullname" . }}-config
+        {{- if .Values.persistence.enabled }}
+        - name: data-volume
+          persistentVolumeClaim:
+            claimName: {{ include "devops-info-chart.fullname" . }}-data
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}

@@ -2,6 +2,15 @@ replicaCount: 1
 
 image:
   tag: "1.0.1"
+envConfig:
+  APP_ENV: "dev"
+  LOG_LEVEL: "DEBUG"
+  FEATURE_VISITS_COUNTER: "true"
+persistence:
+  enabled: true
+  size: 100Mi
+  storageClass: ""
+  mountPath: /data
 
 service:
   type: NodePort

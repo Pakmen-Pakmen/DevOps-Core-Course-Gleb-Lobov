@@ -2,6 +2,15 @@ replicaCount: 5
 
 image:
   tag: "1.0.1"
+envConfig:
+  APP_ENV: "prod"
+  LOG_LEVEL: "INFO"
+  FEATURE_VISITS_COUNTER: "true"
+persistence:
+  enabled: true
+  size: 200Mi
+  storageClass: ""
+  mountPath: /data
 
 service:
   type: LoadBalancer

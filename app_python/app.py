@@ -8,6 +8,7 @@ import socket
 import platform
 import logging
 import time
+import threading
 from datetime import datetime, timezone
 
 from flask import Flask, jsonify, request
@@ -30,6 +31,7 @@ FRAMEWORK = "Flask"
 # -----------------------------------------------------------------------------
 app = Flask(__name__)
 START_TIME = datetime.now(timezone.utc)
+VISITS_LOCK = threading.Lock()
 
 logging.basicConfig(
     level=logging.INFO,
@@ -128,6 +130,41 @@ def get_system_info():
             "python_version": platform.python_version(),
         }
 
+
+def get_visits_file_path():
+    return os.getenv("VISITS_FILE", "/data/visits")
+
+
+def read_visits():
+    visits_file = get_visits_file_path()
+    try:
+        with open(visits_file, "r", encoding="utf-8") as file:
+            raw_value = file.read().strip()
+        return int(raw_value) if raw_value else 0
+    except FileNotFoundError:
+        return 0
+    except ValueError:
+        return 0
+
+
+def write_visits(value):
+    visits_file = get_visits_file_path()
+    directory = os.path.dirname(visits_file)
+    if directory:
+        os.makedirs(directory, exist_ok=True)
+    temp_file = f"{visits_file}.tmp"
+    with open(temp_file, "w", encoding="utf-8") as file:
+        file.write(str(value))
+    os.replace(temp_file, visits_file)
+
+
+def increment_visits():
+    with VISITS_LOCK:
+        current = read_visits()
+        updated = current + 1
+        write_visits(updated)
+        return updated
+
 # -----------------------------------------------------------------------------
 # Routes
 # -----------------------------------------------------------------------------
@@ -138,6 +175,7 @@ def index():
 
     # Business metric: count calls to main endpoint
     endpoint_calls.labels(endpoint="/").inc()
+    visits = increment_visits()
 
     uptime = get_uptime()
 
@@ -154,6 +192,9 @@ def index():
             "uptime_human": uptime["human"],
             "current_time": datetime.now(timezone.utc).isoformat(),
             "timezone": "UTC",
+        },
+        "stats": {
+            "visits": visits
         },
         "request": {
             "client_ip": request.remote_addr,
@@ -181,6 +222,11 @@ def index():
                 "path": "/metrics",
                 "method": "GET",
                 "description": "Prometheus metrics"
+            },
+            {
+                "path": "/visits",
+                "method": "GET",
+                "description": "Current visits counter"
             }
         ]
     }
@@ -213,6 +259,16 @@ def ready():
 def metrics():
     """Prometheus metrics endpoint."""
     return generate_latest(), 200, {'Content-Type': 'text/plain'}
+
+
+@app.route("/visits", methods=["GET"])
+def visits():
+    """Return current visits counter."""
+    endpoint_calls.labels(endpoint="/visits").inc()
+    return jsonify({
+        "visits": read_visits(),
+        "timestamp": datetime.now(timezone.utc).isoformat(),
+    })
 
 # -----------------------------------------------------------------------------
 # Error handlers
