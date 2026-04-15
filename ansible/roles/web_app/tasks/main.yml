@@ -1,0 +1,45 @@
+- name: Docker login
+  community.docker.docker_login:
+    username: "{{ docker_username }}"
+    password: "{{ docker_password }}"
+  tags:
+    - deploy
+
+- name: Pull Docker image
+  community.docker.docker_image:
+    name: "{{ docker_image }}"
+    source: pull
+  tags:
+    - deploy
+
+- name: Create docker-compose file
+  template:
+    src: docker-compose.yml.j2
+    dest: /home/ubuntu/docker-compose.yml
+  tags:
+    - deploy
+
+- name: Run application with docker compose
+  command: docker-compose up -d
+  args:
+    chdir: /home/ubuntu
+  register: compose_result
+  changed_when: "'Creating' in compose_result.stdout or 'Recreating' in compose_result.stdout"
+
+- name: Stop and remove container
+  community.docker.docker_container:
+    name: python_app
+    state: absent
+  tags:
+    - wipe
+
+- name: Wait for application
+  uri:
+    url: http://localhost:8000
+    status_code: 200
+  register: result
+  retries: 5
+  delay: 3
+  until: result.status == 200
+  tags:
+    - deploy
