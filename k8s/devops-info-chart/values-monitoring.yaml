@@ -1,0 +1,25 @@
+workload:
+  kind: statefulset
+
+replicaCount: 3
+
+service:
+  type: ClusterIP
+  nodePort: null
+
+persistence:
+  enabled: true
+  size: 100Mi
+  storageClass: ""
+  mountPath: /data
+
+initContainers:
+  enabled: true
+  download:
+    image: busybox:1.36
+    url: https://example.com
+    outputFile: index.html
+  waitForService:
+    image: busybox:1.36
+    host: monitoring-kube-prometheus-prometheus.monitoring.svc.cluster.local
+    intervalSeconds: 2

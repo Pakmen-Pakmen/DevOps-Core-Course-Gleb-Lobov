@@ -1,0 +1,6 @@
+rollout:
+  strategy: canary
+
+service:
+  type: ClusterIP
+  nodePort: null
