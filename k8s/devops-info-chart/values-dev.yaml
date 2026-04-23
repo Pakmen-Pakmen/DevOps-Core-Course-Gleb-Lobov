@@ -1,0 +1,35 @@
+replicaCount: 1
+
+image:
+  tag: "1.0.1"
+envConfig:
+  APP_ENV: "dev"
+  LOG_LEVEL: "DEBUG"
+  FEATURE_VISITS_COUNTER: "true"
+persistence:
+  enabled: true
+  size: 100Mi
+  storageClass: ""
+  mountPath: /data
+
+service:
+  type: NodePort
+  port: 80
+  targetPort: 5000
+  nodePort: 30081
+
+resources:
+  requests:
+    memory: "64Mi"
+    cpu: "50m"
+  limits:
+    memory: "128Mi"
+    cpu: "100m"
+
+livenessProbe:
+  initialDelaySeconds: 5
+  periodSeconds: 10
+
+readinessProbe:
+  initialDelaySeconds: 3
+  periodSeconds: 5

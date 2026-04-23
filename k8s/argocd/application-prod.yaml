@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: devops-info-prod
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/Pakmen-Pakmen/DevOps-Core-Course-Gleb-Lobov.git
+    targetRevision: lab12
+    path: k8s/devops-info-chart
+    helm:
+      valueFiles:
+        - values-prod.yaml
+      parameters:
+        - name: service.type
+          value: ClusterIP
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: prod
+  syncPolicy:
+    syncOptions:
+      - CreateNamespace=true

@@ -1,0 +1,8 @@
+rollout:
+  strategy: blueGreen
+  blueGreen:
+    autoPromotionEnabled: false
+
+service:
+  type: ClusterIP
+  nodePort: null
