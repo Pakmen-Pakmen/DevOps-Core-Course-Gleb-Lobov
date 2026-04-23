@@ -26,6 +26,24 @@ spec:
       serviceAccountName: {{ include "devops-info-chart.serviceAccountName" . }}
       securityContext:
         {{- toYaml .Values.podSecurityContext | nindent 8 }}
+      {{- if .Values.initContainers.enabled }}
+      initContainers:
+        - name: init-download
+          image: {{ .Values.initContainers.download.image }}
+          command:
+            - sh
+            - -c
+            - wget -O /init-data/{{ .Values.initContainers.download.outputFile }} {{ .Values.initContainers.download.url }}
+          volumeMounts:
+            - name: init-workdir
+              mountPath: /init-data
+        - name: wait-for-service
+          image: {{ .Values.initContainers.waitForService.image }}
+          command:
+            - sh
+            - -c
+            - until nslookup {{ .Values.initContainers.waitForService.host }}; do sleep {{ .Values.initContainers.waitForService.intervalSeconds }}; done
+      {{- end }}
       containers:
         - name: devops-info-service
           securityContext:
@@ -53,6 +71,10 @@ spec:
             - name: data-volume
               mountPath: {{ .Values.persistence.mountPath }}
             {{- end }}
+            {{- if .Values.initContainers.enabled }}
+            - name: init-workdir
+              mountPath: /init-data
+            {{- end }}
           {{- with .Values.livenessProbe }}
           livenessProbe:
             {{- toYaml . | nindent 12 }}
@@ -69,6 +91,10 @@ spec:
         - name: config-volume
           configMap:
             name: {{ include "devops-info-chart.fullname" . }}-config
+        {{- if .Values.initContainers.enabled }}
+        - name: init-workdir
+          emptyDir: {}
+        {{- end }}
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
