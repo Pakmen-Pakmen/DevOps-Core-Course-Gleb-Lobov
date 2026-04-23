@@ -1,13 +1,11 @@
-apiVersion: apps/v1
-kind: Deployment
+apiVersion: argoproj.io/v1alpha1
+kind: Rollout
 metadata:
   name: {{ include "devops-info-chart.fullname" . }}
   labels:
     {{- include "devops-info-chart.labels" . | nindent 4 }}
 spec:
   replicas: {{ .Values.replicaCount }}
-  strategy:
-    {{- toYaml .Values.strategy | nindent 4 }}
   selector:
     matchLabels:
       {{- include "devops-info-chart.selectorLabels" . | nindent 6 }}
@@ -94,3 +92,25 @@ spec:
       tolerations:
         {{- toYaml . | nindent 8 }}
       {{- end }}
+  strategy:
+    {{- if eq .Values.rollout.strategy "blueGreen" }}
+    blueGreen:
+      activeService: {{ include "devops-info-chart.fullname" . }}
+      previewService: {{ include "devops-info-chart.fullname" . }}-preview
+      autoPromotionEnabled: {{ .Values.rollout.blueGreen.autoPromotionEnabled }}
+    {{- else }}
+    canary:
+      steps:
+        - setWeight: 20
+        - pause: {}
+        - setWeight: 40
+        - pause:
+            duration: 30s
+        - setWeight: 60
+        - pause:
+            duration: 30s
+        - setWeight: 80
+        - pause:
+            duration: 30s
+        - setWeight: 100
+    {{- end }}
