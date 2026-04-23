@@ -1,0 +1,14 @@
+workload:
+  kind: statefulset
+
+replicaCount: 3
+
+service:
+  type: ClusterIP
+  nodePort: null
+
+persistence:
+  enabled: true
+  size: 100Mi
+  storageClass: ""
+  mountPath: /data

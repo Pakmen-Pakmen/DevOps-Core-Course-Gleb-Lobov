@@ -1,12 +1,12 @@
-{{- if and (eq .Values.workload.kind "rollout") (eq .Values.rollout.strategy "blueGreen") }}
+{{- if eq .Values.workload.kind "statefulset" }}
 apiVersion: v1
 kind: Service
 metadata:
-  name: {{ include "devops-info-chart.fullname" . }}-preview
+  name: {{ include "devops-info-chart.fullname" . }}-headless
   labels:
     {{- include "devops-info-chart.labels" . | nindent 4 }}
 spec:
-  type: ClusterIP
+  clusterIP: None
   ports:
     - port: {{ .Values.service.port }}
       targetPort: http
